@@ -18,7 +18,6 @@
         // https://msdn.microsoft.com/ja-jp/library/office/fp161062.aspx
         // ドキュメント内で選択が変更されるときに発生
         Office.context.document.addHandlerAsync(Office.EventType.DocumentSelectionChanged, displaySelectedCells);
-        showNotification('hoge', 'fuga');
 
         // Excel 2016 を使用していない場合は、フォールバック ロジックを使用してください。
         if (!Office.context.requirements.isSetSupported('ExcelApi', '1.1')) {
@@ -38,8 +37,84 @@
             // 強調表示ボタンのクリック イベント ハンドラーを追加します。
             $('#highlight-button').click(hightlightHighestValue);
         }
+
+        // 画像挿入
+        if (Office.context.requirements.isSetSupported("ImageCoercion")) {
+            $("#template-description").text("ImageCoercion is supported.");
+            insertViaImageCoercion();
+        } else {
+            $("#template-description").text("ImageCoercion is NOT supported.");
+            insertViaOoxml();
+        }
     };
 
+    // https://qr4office.azurewebsites.net/App/Home/Home.js
+    function insertViaImageCoercion() {
+        // Document.setSelectedDataAsync メソッド 
+        // ドキュメント内の現在の選択範囲にデータを書き込みます。
+        // https://msdn.microsoft.com/ja-jp/library/office/fp142145.aspx
+        //Office.context.document.setSelectedDataAsync(currentBinaryImage,
+        //    { coercionType: Office.CoercionType.Image },
+        //    function (result) {
+        //        if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        //            app.showNotification(
+        //                'Error inserting into selection:',
+        //                "An unexpected error occured.  " +
+        //                GeneratePleaseCopyPasteText() + "  Error message: " + result.error.message);
+        //        }
+        //    }
+        //);
+    }
+
+    // https://qr4office.azurewebsites.net/App/Home/Home.js
+    function insertViaOoxml() {
+        //var dataToPassToService = {
+        //    'width': fullWidth,
+        //    'height': fullHeight,
+        //    'count': countBeforeInserting,
+        //    'token': token,
+        //    'version': LATEST_VERSION
+        //};
+        //$.ajax({
+        //    url: '../../api/XML',
+        //    type: 'POST',
+        //    data: JSON.stringify(dataToPassToService),
+        //    contentType: "application/json;charset=utf-8",
+        //    cache: false
+        //}).done(function (data) {
+        //    replaceXMLAndInsert(data);
+        //    countBeforeInserting = 0;
+        //}).fail(function () {
+        //    app.showNotification('Error:', 'Error inserting image, you may ' +
+        //        'try copy-pasting the image instead.');
+        //});
+
+        //function replaceXMLAndInsert(xml) {
+        //    xml = xml.replace('{{{BINARY_IMAGE_DATA}}}', currentBinaryImage);
+
+        //    // Only way to get here is if button is visible.  In which case there's
+        //    //     also a preview image, and a current OOXML loaded.
+        //    Office.context.document.setSelectedDataAsync(xml,
+        //        { coercionType: Office.CoercionType.Ooxml },
+        //        function (result) {
+        //            if (result.status !== Office.AsyncResultStatus.Succeeded) {
+        //                var message = result.error.message;
+        //                // 1000 code is "Invalid Coercion Type", but unlike the name, doesn't get localized cross languages
+        //                // 5007 code is "unsupported enumeration", but unlike the name, doesn't get localized cross languages
+        //                if (result.error.code === 1000 || result.error.code == 5007) {
+        //                    message = 'Unfortunately, the programmatic insertion of images is ' +
+        //                        'not supported in this Office application yet.  ' +
+        //                        GeneratePleaseCopyPasteText();
+        //                }
+        //                app.showNotification(
+        //                    'Error inserting into selection:', message);
+        //            }
+        //        }
+        //    );
+        //}
+    }
+
+    // サンプルデータ埋め込み。Office2016以降で動作。
     function loadSampleData() {
         if (!Office.context.requirements.isSetSupported('ExcelApi', '1.1')) {
             $("#template-description").text("ExcelApi 1.1 Not Supported");
@@ -103,6 +178,7 @@
         .catch(errorHandler);
     }
 
+    // Office2016以降で動作
     function displaySelectedCells() {
         Office.context.document.getSelectedDataAsync(Office.CoercionType.Text,
             function (result) {
