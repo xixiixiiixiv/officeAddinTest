@@ -1,0 +1,142 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--Created:ce44715c-8c4e-446b-879c-ea9ebe0f09c8-->
+<OfficeApp 
+          xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" 
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+          xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" 
+          xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides"
+          xsi:type="TaskPaneApp">
+
+  <!-- 基本設定の開始: オーバーライドが提供されない限りすべてのバージョンの Office で使用される、アドインのメタデータ。 -->
+
+  <!-- 重要! アドインの ID は一意である必要があります。このマニフェストを再利用する場合は、この ID を新しい GUID に変更してください。 -->
+  <Id>60c52075-66da-44dd-9b86-e9ec4c815c0b</Id>
+
+  <!--バージョン。ストアから更新がトリガーされるのは、バージョンに変更があった場合だけです。 -->
+  <Version>1.0.0.0</Version>
+  <ProviderName>[プロバイダー名]</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <!-- アドインの表示名。ストアのほか、Office UI のさまざまな場所 (アドイン ダイアログなど) で使われます。 -->
+  <DisplayName DefaultValue="ExcelWebAddIn4" />
+  <Description DefaultValue="ExcelWebAddIn4"/>
+  <!-- アドインのアイコン。インストール画面やアドイン ダイアログで使います。 -->
+  <IconUrl DefaultValue="~remoteAppUrl/Images/Button32x32.png" />
+
+  <SupportUrl DefaultValue="http://www.contoso.com" />
+  <!-- ナビゲーションで許可されるドメイン。たとえば、ShowTaskpane を使った href リンクによるナビゲーションは、ドメインがこの一覧に含まれている場合にのみ許可されます。 -->
+  <AppDomains>
+    <AppDomain>AppDomain1</AppDomain>
+    <AppDomain>AppDomain2</AppDomain>
+    <AppDomain>AppDomain3</AppDomain>
+  </AppDomains>
+  <!--基本設定の終了。 -->
+  
+  <!--TaskPane モードの統合の開始。このセクションは、VersionOverrides がない場合か、Office クライアント バージョンがアドイン コマンドをサポートしない場合に使用します。 -->
+  <Hosts>
+    <Host Name="Workbook" />
+  </Hosts>
+  <DefaultSettings>
+    <SourceLocation DefaultValue="~remoteAppUrl/Home.html" />
+  </DefaultSettings>
+  <!-- TaskPane モードの統合の終了。  -->
+
+  <Permissions>ReadWriteDocument</Permissions>
+
+  <!-- アドイン コマンド モードの統合の開始。 -->
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="VersionOverridesV1_0">
+    
+    <!-- Hosts ノードが必須です。 -->
+    <Hosts>
+      <!-- 各ホストは、異なったセットのコマンドを持つ可能性があります。 -->
+      <!-- Excel ホストはブック、Word ホストは文書、PowerPoint ホストはプレゼンテーションです。 -->
+      <!-- 上書きするホストが、マニフェストの最上位セクションで宣言されているホストと一致することを確認してください。 -->
+      <Host xsi:type="Workbook">
+        <!-- フォーム ファクター。現在サポートされているのは、DesktopFormFactor のみです。 -->
+        <DesktopFormFactor>
+          <!--"このコードは、個別のインストールでアドインが正常に読み込まれたときに、カスタマイズ可能なメッセージを表示できるようにします。"-->
+          <GetStarted>
+            <!-- [はじめに] 吹き出しのタイトル。resid 属性は ShortString リソースをポイントします -->
+            <Title resid="Contoso.GetStarted.Title"/>
+
+            <!-- [はじめに] のコールアウトの説明。resid は LongString リソースをポイントします -->
+            <Description resid="Contoso.GetStarted.Description"/>
+
+            <!-- アドインの使用方法の詳細を示す URL リソースを指します。 -->
+            <LearnMoreUrl resid="Contoso.GetStarted.LearnMoreUrl"/>
+          </GetStarted>
+          <!-- 関数ファイルは、ExecuteAction の関数が呼び出される JavaScript を含んだ HTML ページです。             FunctionFile は、ExecuteFunction の分離コードと考えることができます。 -->
+          <FunctionFile resid="Contoso.DesktopFunctionFile.Url" />
+
+          <!-- PrimaryCommandSurface は Office のメイン リボンです。 -->
+          <ExtensionPoint xsi:type="PrimaryCommandSurface">
+            <!-- OfficeTab を使って既存のタブを拡張します。CustomTab を使って新しいタブを作成します。 -->
+            <OfficeTab id="TabHome">
+              <!-- グループに一意の ID を割り当てたことを確認してください。すべての ID の名前空間には会社名を使用することをお勧めします。 -->
+              <Group id="Contoso.Group1">
+                <!-- グループのラベル。resid は、短い文字列リソースをポイントしている必要があります。 -->
+                <Label resid="Contoso.Group1Label" />
+                <!-- アイコン。必須のサイズは、16、32、80。オプションは、20、24、40、48、64。ユーザー エクスペリエンスの向上のため、すべてのサイズを用意することを強くお勧めします。 -->
+                <!-- PNG アイコンを使用してください。、リソース セクションの URL はすべて HTTPS を使用する必要があります。 -->
+                <Icon>
+                  <bt:Image size="16" resid="Contoso.tpicon_16x16" />
+                  <bt:Image size="32" resid="Contoso.tpicon_32x32" />
+                  <bt:Image size="80" resid="Contoso.tpicon_80x80" />
+                </Icon>
+
+                <!-- コントロール。種類としては "Button" と "Menu" を利用できます。 -->
+                <Control xsi:type="Button" id="Contoso.TaskpaneButton">
+                  <Label resid="Contoso.TaskpaneButton.Label" />
+                  <Supertip>
+                    <!-- ヒントのタイトル。resid は、短い文字列リソースをポイントしている必要があります。 -->
+                    <Title resid="Contoso.TaskpaneButton.Label" />
+                    <!-- ヒントの説明。resid は、長い文字列リソースをポイントしている必要があります。 -->
+                    <Description resid="Contoso.TaskpaneButton.Tooltip" />
+                  </Supertip>
+                  <Icon>
+                    <bt:Image size="16" resid="Contoso.tpicon_16x16" />
+                    <bt:Image size="32" resid="Contoso.tpicon_32x32" />
+                    <bt:Image size="80" resid="Contoso.tpicon_80x80" />
+                  </Icon>
+
+                  <!-- コマンドがトリガーされた (たとえば、リボンがクリックされた) ときに実行される内容です。サポートされるアクションは、ExecuteFunction または ShowTaskpane です。 -->
+                  <Action xsi:type="ShowTaskpane">
+                    <TaskpaneId>ButtonId1</TaskpaneId>
+                    <!-- 作業ウィンドウに表示する場所の URL リソース ID を指定します。 -->
+                    <SourceLocation resid="Contoso.Taskpane.Url" />
+                  </Action>
+                </Control>
+              </Group>
+            </OfficeTab>
+          </ExtensionPoint>
+        </DesktopFormFactor>
+      </Host>
+    </Hosts>
+    
+    <!-- 複数のホストやフォーム ファクターをまたいでリソースを利用できます。 -->
+    <Resources>
+      <bt:Images>
+        <bt:Image id="Contoso.tpicon_16x16" DefaultValue="~remoteAppUrl/Images/Button16x16.png" />
+        <bt:Image id="Contoso.tpicon_32x32" DefaultValue="~remoteAppUrl/Images/Button32x32.png" />
+        <bt:Image id="Contoso.tpicon_80x80" DefaultValue="~remoteAppUrl/Images/Button80x80.png" />
+      </bt:Images>
+      <bt:Urls>
+        <bt:Url id="Contoso.DesktopFunctionFile.Url" DefaultValue="~remoteAppUrl/Functions/FunctionFile.html" />
+        <bt:Url id="Contoso.Taskpane.Url" DefaultValue="~remoteAppUrl/Home.html" />
+        <bt:Url id="Contoso.GetStarted.LearnMoreUrl" DefaultValue="https://go.microsoft.com/fwlink/?LinkId=276812" />
+      </bt:Urls>
+      <!-- 短い文字列の最大文字数==125。 -->
+      <bt:ShortStrings>
+        <bt:String id="Contoso.TaskpaneButton.Label" DefaultValue="Show Taskpane" />
+        <bt:String id="Contoso.Group1Label" DefaultValue="Commands Group" />
+        <bt:String id="Contoso.GetStarted.Title" DefaultValue="Get started with your sample add-in!" />
+      </bt:ShortStrings>
+      <!-- 長い文字列の最大文字数==250。 -->
+      <bt:LongStrings>
+        <bt:String id="Contoso.TaskpaneButton.Tooltip" DefaultValue="Click to Show a Taskpane" />
+        <bt:String id="Contoso.GetStarted.Description" DefaultValue="Your sample add-in loaded succesfully. Go to the HOME tab and click the 'Show Taskpane' button to get started." />
+      </bt:LongStrings>
+    </Resources>
+  </VersionOverrides>
+  <!-- アドイン コマンド モードの統合の終了。 -->
+
+</OfficeApp>
