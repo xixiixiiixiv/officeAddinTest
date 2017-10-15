@@ -40,10 +40,13 @@
 
         // 画像挿入
         if (Office.context.requirements.isSetSupported("ImageCoercion")) {
+            //https://msdn.microsoft.com/ja-jp/library/office/fp142145.aspx
             $("#template-description").text("ImageCoercion is supported.");
+            // Excelでの画像挿入
             insertViaImageCoercion();
         } else {
             $("#template-description").text("ImageCoercion is NOT supported.");
+            // Wordでの画像挿入
             insertViaOoxml();
         }
     };
@@ -178,7 +181,7 @@
         .catch(errorHandler);
     }
 
-    // Office2016以降で動作
+    // 現在選択されているセルの内容を表示
     function displaySelectedCells() {
         Office.context.document.getSelectedDataAsync(Office.CoercionType.Text,
             function (result) {
